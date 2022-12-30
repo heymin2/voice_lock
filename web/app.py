@@ -1,36 +1,41 @@
 from flask import Flask, render_template, redirect, request, url_for
 import pymysql
+from werkzeug.utils import secure_filename
+
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def voice():
-    # jsonbody = request.get_json(force=True, silent=True)
-    # name = jsonbody['name']
-    # print(name)
-    print(request.is_json)
 
     return render_template('voiceRecord.html')
 
 
-@app.route('/sign', methods=['GET', 'POST'])
+@app.route('/sign', methods=['GET', 'POST'])  # 회원가입 -> 디비 저장
 def sign():
     db = pymysql.connect(host='localhost', port=3306, user='hyemin',
                          password='1234', db='user', charset='utf8')
     cursor = db.cursor()
     if request.method == 'POST':
-        id = request.form.get('id')
-        passwd = request.form.get('passwd')
-        voice = "no"
-        sql = "INSERT INTO user (id, pass, voice) VALUES (%s, %s, %s)"
-        cursor.execute(sql, (id, passwd, voice))
-        db.commit()
+        file = request.files['voice']
+        file.save(secure_filename(file.filename))
+        # id = request.form.get('id')
+        # passwd = request.form.get('passwd')
+        # voice = id+'.png'
+        # sql = "INSERT INTO user (id, pass, voice) VALUES (%s, %s, %s)"
+        # cursor.execute(sql, (id, passwd, voice))
+        # db.commit()
         return redirect(url_for('login'))
     return render_template('sign.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        file = request.files['voice']
+        file.save(secure_filename(file.filename))
+
+        # print(body.read())
     return render_template('login.html')
 
 

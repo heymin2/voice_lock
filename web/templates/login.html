@@ -8,12 +8,22 @@
     <title>login</title>
 </head>
 
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous">
+    </script>
+<script src="{{url_for('static', filename='./voiceRecord.js')}}"></script>
+<script type="text/javascript">
+</script>
+
 <body>
     <h2>로그인</h2>
-    <form>
-        id <input type="text">
+    <form method="POST">
+        id <input name="id" id="login_id" type="text">
+        <button type="button" id="record">녹음</button>
+        <button type="button" name='end' id="stop">정지</button>
+        <div id="sound-clips"></div><br />
+        <button id="login" type="button">로그인</button>
     </form>
-
 </body>
 
 </html>

@@ -3,8 +3,8 @@ $(document).ready(function () {
     const record = document.getElementById('record');
     const stop = document.getElementById('stop');
     const soundClips = document.getElementById('sound-clips');
-    const login = document.getElementById('login');
-    const login_id = document.getElementById("login_id");
+    const sign = document.getElementById('sign');
+    const sign_id = document.getElementById('id');
 
 
     if (navigator.mediaDevices) {
@@ -62,22 +62,20 @@ $(document).ready(function () {
                     const audioURL = URL.createObjectURL(blob);
                     audio.src = audioURL;
 
-                    const formData = new FormData();
-                    formData.append("voice", blob, login_id.value + ".wav")
-
-
-                    // 로그인 버튼 클릭시 통신
-                    login.onclick = () => {
-                        fetch("http://127.0.0.1:5000/login", {
-                            method: "POST",
-                            cache: 'no-cache',
-                            body: formData
-                        })
-                    }
+                    const formData2 = new FormData();
+                    formData2.append("voice", blob, sign_id.value + ".wav")
 
                     // 녹음 들리도록
                     const a = document.createElement('a');
 
+                    // 회원가입 버튼 클릭시 통신
+                    sign.onclick = () => {
+                        fetch("http://127.0.0.1:5000/sign", {
+                            method: "POST",
+                            cache: 'no-cache',
+                            body: formData2
+                        })
+                    }
                 };
 
                 // 녹음 시작 상태가 되면 chunks에   녹음 데이터 저장
