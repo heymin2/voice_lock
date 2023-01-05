@@ -63,7 +63,7 @@ $(document).ready(function () {
                     audio.src = audioURL;
 
                     const formData = new FormData();
-                    formData.append("voice", blob, login_id.value + ".wav")
+                    formData.append("voice", blob, login_id.value)
 
 
                     // 로그인 버튼 클릭시 통신

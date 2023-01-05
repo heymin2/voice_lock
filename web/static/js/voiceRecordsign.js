@@ -63,7 +63,7 @@ $(document).ready(function () {
                     audio.src = audioURL;
 
                     const formData2 = new FormData();
-                    formData2.append("voice", blob, sign_id.value + ".wav")
+                    formData2.append("voice", blob, sign_id.value)
 
                     // 녹음 들리도록
                     const a = document.createElement('a');
