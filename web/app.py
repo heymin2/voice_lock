@@ -6,9 +6,8 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def voice():
-
-    return render_template('voiceRecord.html')
+def main():
+    return render_template('main.html')
 
 
 @app.route('/sign', methods=['GET', 'POST'])  # 회원가입 -> 디비 저장
@@ -37,11 +36,6 @@ def login():
 
         # print(body.read())
     return render_template('login.html')
-
-
-@app.route('/main')
-def main():
-    return render_template('main.html')
 
 
 if __name__ == '__main__':
