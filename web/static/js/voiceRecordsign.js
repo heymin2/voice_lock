@@ -5,7 +5,7 @@ $(document).ready(function () {
     const soundClips = document.getElementById('sound-clips');
     const sign = document.getElementById('sign');
     const sign_id = document.getElementById('id');
-
+    const check = document.getElementById('check');
 
     if (navigator.mediaDevices) {
         var constraints = {
@@ -63,18 +63,21 @@ $(document).ready(function () {
                     audio.src = audioURL;
 
                     const formData2 = new FormData();
-                    formData2.append("voice", blob, sign_id.value)
+
+                    formData2.append("voice", blob, sign_id.value);
 
                     // 녹음 들리도록
                     const a = document.createElement('a');
 
                     // 회원가입 버튼 클릭시 통신
-                    sign.onclick = () => {
+                    check.onclick = () => {
                         fetch("http://127.0.0.1:5000/sign", {
                             method: "POST",
                             cache: 'no-cache',
                             body: formData2
                         })
+                        const va = document.getElementById('result');
+                        va.innerText = '2차 설정'
                     }
                 };
 

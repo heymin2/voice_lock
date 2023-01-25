@@ -65,8 +65,15 @@ def sign_file(value):
     plt.figure(figsize=(16, 6))
     librosa.display.waveshow(y=y, sr=sr)
     plt.plot(y)
-    plt.savefig('./' + file.filename + '/' +
-                file.filename + ".png")  # png 파일 저장
+
+    print(os.path.exists('./' + file.filename + '/' + file.filename + ".png"))
+
+    if os.path.exists('./' + file.filename + '/' + file.filename + ".png") == True:  # 파일 중복시
+        plt.savefig('./' + file.filename + '/' +
+                    file.filename + '(1)' + ".png")
+    else:
+        plt.savefig('./' + file.filename + '/' +
+                    file.filename + ".png")  # png 파일 저장
 
     os.remove('./' + file.filename + '/' +
               file.filename + '.wav')  # 음성 파일 제거
