@@ -91,6 +91,8 @@ $(document).ready(function () {
                 console.log("오류 발생 : " + err)
             })
 
-        // 
+        sign.onClick = () => {
+
+        }
     }
 });
