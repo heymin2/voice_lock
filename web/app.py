@@ -16,27 +16,37 @@ app = Flask(__name__)
 def main():
     return render_template('main.html')
 
-
-@app.route('/sign', methods=['GET', 'POST'])  # 회원가입 -> 디비 저장
+@app.route('/sign', methods=['GET', 'POST'])
 def sign():
-    # db = pymysql.connect(host='localhost', port=3306, user='hyemin',
-    #                      password='1234', db='user', charset='utf8')
-    # cursor = db.cursor()
+    db = pymysql.connect(host='localhost', port=3306, user='nemin',
+                         password='1234', db='voice', charset='utf8')
+    cursor = db.cursor()
+    if request.method == 'POST':
+        id = request.form.get('id')
+        passwd = request.form.get('passwd')
+        voice1 = id+'.png'
+        voice2 = id+'(1).png'
+        sql = "INSERT INTO voiceInfo (id, pass, voice1, voice2) VALUES (%s, %s, %s, %s)"
+        cursor.execute(sql, (id, passwd, voice1, voice2))
+        db.commit()
+        return redirect(url_for('login'))
+    return render_template('sign.html')
+    
+
+@app.route('/sign/img', methods = ['GET', 'POST'])
+def signimg():
     if request.method == 'POST':
         sign_file('voice')
-
-        # id = request.form.get('id')
-        # passwd = request.form.get('passwd')
-        # voice = id+'.png'
-        # sql = "INSERT INTO user (id, pass, voice) VALUES (%s, %s, %s)"
-        # cursor.execute(sql, (id, passwd, voice))
-        # db.commit()
-        return redirect(url_for('login'))
     return render_template('sign.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    return render_template('login.html')
+
+
+@app.route('/login/img', methods=['GET', 'POST'])
+def loginimg():
     if request.method == 'POST':
         login_file('voice')
     return render_template('login.html')
@@ -65,8 +75,6 @@ def sign_file(value):
     plt.figure(figsize=(16, 6))
     librosa.display.waveshow(y=y, sr=sr)
     plt.plot(y)
-
-    print(os.path.exists('./' + file.filename + '/' + file.filename + ".png"))
 
     if os.path.exists('./' + file.filename + '/' + file.filename + ".png") == True:  # 파일 중복시
         plt.savefig('./' + file.filename + '/' +

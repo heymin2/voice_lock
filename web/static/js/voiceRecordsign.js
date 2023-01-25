@@ -69,9 +69,9 @@ $(document).ready(function () {
                     // 녹음 들리도록
                     const a = document.createElement('a');
 
-                    // 회원가입 버튼 클릭시 통신
+                    // 확인 버튼 클릭시 통신 -> 음성 -> 이미지
                     check.onclick = () => {
-                        fetch("http://127.0.0.1:5000/sign", {
+                        fetch("http://127.0.0.1:5000/sign/img", {
                             method: "POST",
                             cache: 'no-cache',
                             body: formData2
@@ -90,9 +90,5 @@ $(document).ready(function () {
             .catch(err => {
                 console.log("오류 발생 : " + err)
             })
-
-        sign.onClick = () => {
-
-        }
     }
 });
