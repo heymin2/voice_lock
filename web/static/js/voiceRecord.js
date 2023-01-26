@@ -68,7 +68,7 @@ $(document).ready(function () {
 
                     // 로그인 버튼 클릭시 통신
                     login.onclick = () => {
-                        fetch("http://127.0.0.1:5000/login", {
+                        fetch("http://127.0.0.1:5000/login/img", {
                             method: "POST",
                             cache: 'no-cache',
                             body: formData
