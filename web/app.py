@@ -58,7 +58,7 @@ def sign_file(value):
     os.makedirs('./' + file.filename, exist_ok=True)  # 폴더 생성
 
     file.save(os.path.join('./' + file.filename,
-                           secure_filename(file.filename) + '.wav'))  # 폴더 위치에 파일 저장
+                           file.filename + '.wav'))  # 폴더 위치에 파일 저장
 
     audio_path = './' + file.filename + '/' + file.filename + '.wav'  # 오디오 파일 경로
 
@@ -92,7 +92,7 @@ def login_file(value):
 
     if (os.path.isdir('./' + file.filename) == True):
         file.save(os.path.join('./' + file.filename,
-                               secure_filename(file.filename) + '.wav'))  # 폴더 위치에 파일 저장
+                               file.filename + '.wav'))  # 폴더 위치에 파일 저장
 
         audio_path = './' + file.filename + '/' + file.filename + '.wav'  # 오디오 파일 경로
 
