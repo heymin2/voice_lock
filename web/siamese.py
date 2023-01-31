@@ -1,20 +1,17 @@
-import torchvision
+import torch
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader,Dataset
-import matplotlib.pyplot as plt
 import torchvision.utils
 import numpy as np
 import random
 from PIL import Image
 import torch
-from torch.autograd import Variable
 import PIL.ImageOps    
 import torch.nn as nn
 from torch import optim
 import torch.nn.functional as F
-import os
-
+from torch.autograd import Variable
 
 #커스텀 데이터셋을 정의합시다.
 class SiameseNetworkDataset(Dataset):
@@ -147,3 +144,50 @@ def train():
                 iteration_number +=10
                 counter.append(iteration_number)
                 loss_history.append(loss_contrastive.item())
+    torch.save(net.state_dict(), 'siamese.pt')
+
+
+def test(name):
+    # 실제 이미지와 테스트
+    test = Image.open('test/' + name + '.png')
+    test = test.convert("L")
+    transform=transforms.Compose([transforms.Resize((100,100)), transforms.ToTensor()])
+    test = transform(test)
+    test = test.unsqueeze(0)
+
+    siamese_dataset = SiameseNetworkDataset(imageFolderDataset=dset.ImageFolder(root="img"),
+                                            transform=transforms.Compose([transforms.Resize((100,100)),
+                                                                        transforms.ToTensor()
+                                                                        ])
+                                        ,should_invert=False)
+    test_dataloader = DataLoader(siamese_dataset,num_workers=6,batch_size=1,shuffle=False)
+
+    net = SiameseNetwork().cuda()
+    net.load_state_dict(torch.load('siamese.pt'))
+    net.eval()
+
+    dataiter = iter(test_dataloader)
+    x0,_,_ = next(dataiter)
+
+    distance_history = [] 
+    label = []
+
+    for i in range(len(test_dataloader)-1):
+
+        path = test_dataloader.dataset.imageFolderDataset.imgs[i][0]
+
+        data_label = path.split('/')[-2]
+
+        _,x1,label2 = next(dataiter)
+
+        output1,output2 = net(Variable(test).cuda(),Variable(x1).cuda())
+
+        euclidean_distance = F.pairwise_distance(output1, output2)
+
+        distance_history.append(euclidean_distance.item())
+        label.append(data_label)
+
+    # print('Dissimilarity:', distance_history, label)
+    print(label[distance_history.index(min(distance_history))])
+
+    return label[distance_history.index(min(distance_history))]
