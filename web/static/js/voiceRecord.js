@@ -5,6 +5,7 @@ $(document).ready(function () {
     const soundClips = document.getElementById('sound-clips');
     const login = document.getElementById('login');
     const login_id = document.getElementById("login_id");
+    const check = document.getElementById('check');
 
 
     if (navigator.mediaDevices) {
@@ -66,8 +67,8 @@ $(document).ready(function () {
                     formData.append("voice", blob, login_id.value)
 
 
-                    // 로그인 버튼 클릭시 통신
-                    login.onclick = () => {
+                    // 확인 버튼 클릭시 통신
+                    check.onclick = () => {
                         fetch("http://127.0.0.1:5000/login/img", {
                             method: "POST",
                             cache: 'no-cache',

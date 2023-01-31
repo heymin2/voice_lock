@@ -8,7 +8,7 @@ import librosa.display
 
 import os
 
-from siamese import train
+from siamese import train, test
 
 app = Flask(__name__)
 app.secret_key = 'serseas'
@@ -16,6 +16,10 @@ app.secret_key = 'serseas'
 @app.route('/')
 def main():
     return render_template('main.html')
+
+@app.route('/page')
+def page():
+    return render_template('page.html')
 
 @app.route('/sign', methods=['GET', 'POST'])
 def sign():
@@ -30,6 +34,7 @@ def sign():
         sql = "INSERT INTO voiceInfo (id, pass, voice1, voice2) VALUES (%s, %s, %s, %s);"
         cursor.execute(sql, (id, passwd, voice1, voice2))
         db.commit()
+        train()
         return redirect(url_for('login'))
     return render_template('sign.html')
     
@@ -43,7 +48,6 @@ def signimg():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    train()
     if request.method == 'POST':
         db = pymysql.connect(host='localhost', port=3306, user='nemin',
                          password='1234', db='voice', charset='utf8')
@@ -54,6 +58,12 @@ def login():
         rows = cursor.fetchall()
         if rows[0][0] == 0:
             flash("아이디가 존재하지 않습니다.")
+        else:
+            if(test(id) == id):
+                return redirect(url_for('page'))
+            else:
+                flash("로그인 실패!!")
+            os.remove('./test/' + id + '.png')  # 로그인 파일 제거
 
     return render_template('login.html')
 
@@ -61,6 +71,7 @@ def login():
 @app.route('/login/img', methods=['GET', 'POST'])
 def loginimg():
     if request.method == 'POST':
+        print("엥")
         login_file('voice')
     return render_template('login.html')
 
@@ -104,10 +115,10 @@ def login_file(value):
     file = request.files[value]  # blob 파일 저장
 
     if (os.path.isdir('./img/' + file.filename) == True):
-        file.save(os.path.join('./img/' + file.filename,
-                               file.filename + '_login.wav'))  # 폴더 위치에 파일 저장
+        file.save(os.path.join('./test',
+                               file.filename + '.wav'))  # 폴더 위치에 파일 저장
 
-        audio_path = './img/' + file.filename + '/' + file.filename + '_login.wav'  # 오디오 파일 경로
+        audio_path = './test/' + file.filename + '.wav'  # 오디오 파일 경로
 
         y, sr = librosa.load(audio_path)  # lbrosa.load() : 오디오 파일을 로드한다.
 
@@ -122,12 +133,12 @@ def login_file(value):
         plt.figure(figsize=(16, 6))
         librosa.display.waveshow(y=y, sr=sr)
         plt.plot(y)
-        plt.savefig('./img/' + file.filename + '/' +
-                    file.filename + "_login.png")  # png 파일 저장
+        plt.savefig('./test/' +
+                    file.filename + ".png")  # png 파일 저장
 
-        os.remove('./img/' + file.filename + '/' +
-                  file.filename + '_login.wav')  # 음성 파일 제거
-
+        os.remove('./test/' +
+                  file.filename + '.wav')  # 음성 파일 제거
+        
 
 
 if __name__ == '__main__':
