@@ -117,7 +117,7 @@ class ContrastiveLoss(torch.nn.Module):
 #앞서서 진행했던 실습처럼 옵티마이저와 에포크등을 설정합니다.
 def train():
     #앞서서 정의한 사용자 데이터셋을 불러옵시다.
-    folder_dataset = dset.ImageFolder(root="img")
+    folder_dataset = dset.ImageFolder(root="train")
     siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset,
                                             transform=transforms.Compose([transforms.Resize((100,100)),
                                                                         transforms.ToTensor()
@@ -155,7 +155,7 @@ def test(name):
     test = transform(test)
     test = test.unsqueeze(0)
 
-    siamese_dataset = SiameseNetworkDataset(imageFolderDataset=dset.ImageFolder(root="img"),
+    siamese_dataset = SiameseNetworkDataset(imageFolderDataset=dset.ImageFolder(root="train"),
                                             transform=transforms.Compose([transforms.Resize((100,100)),
                                                                         transforms.ToTensor()
                                                                         ])

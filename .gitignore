@@ -1,2 +1,3 @@
-web/img
+web/train
+web/test
 web/siamese.pt
